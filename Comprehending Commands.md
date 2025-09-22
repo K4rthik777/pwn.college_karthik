@@ -367,8 +367,8 @@ Follow the clues to the flag!
 
 ### Solve
 **Flag:** `c`
- for this Challenge, first i changed the directory to root and then list all the file in it to find the EVIDENCE file and then catted that file to get the next clue. The next clue was to use ls -a to find hidden files in the specified directory (/usr/share/perl/5.30.0/unicore/lib/CWU). i then changed the directory to  (/usr/share/perl/5.30.0/unicore/lib/CWU) and listed files in it using ls -a and found .LEAD file and then catted it to find the next clue.The next clue was to change directory to (/usr/share/racket/pkgs/realm/chapter2/compiled) and list all files in it to find the next clue. Upon changing to get the flag.
-
+ for this Challenge, i found the next clue files by follwing the hints given in present clue. these hints require me use ls -a for hidden clue files or needing to change the directory only then listing the files to obtain the clue file or even listing the files in a specific directory using its absolute path without changing the current dirtectory to get the clue file or simply list all files in a directory to find the clue file. After going through consecutive clue files, it finally lead to the flag.
+ 
 ```bash 
 hacker@commands~an-epic-filesystem-quest:~$ cd /
 hacker@commands~an-epic-filesystem-quest:/$ ls -a
@@ -399,7 +399,7 @@ SECRET-TRAPPED  compiled  reader.rkt
 hacker@commands~an-epic-filesystem-quest:/usr/share/racket/pkgs/realm/chapter2/compiled$ cd
 hacker@commands~an-epic-filesystem-quest:~$ cat /usr/share/racket/pkgs/scribble-lib/scribble/base/lang/SECRET-TRAPPED
 Lucky listing!
-The next clue is in: /usr/share/racket/pkgs/net-cookies
+The next clue is in: /usr/sharrace/ket/pkgs/net-cookies
 
 The next clue is **hidden** --- its filename starts with a '.' character. You'll need to look for it using special options to 'ls'.
 hacker@commands~an-epic-filesystem-quest:~$ ls -a /usr/share/racket/pkgs/net-cookies
@@ -442,3 +442,4 @@ It is: pwn.college{kqNs6MB92DEw3B4S5Syl41o9Oeo.QX5IDO0wSN1gjNzEzW}
 I learned how to use cat command to read a file with its absolute path  in linux terminal
 
 ### References
+
