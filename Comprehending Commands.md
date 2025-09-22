@@ -439,7 +439,7 @@ It is: pwn.college{kqNs6MB92DEw3B4S5Syl41o9Oeo.QX5IDO0wSN1gjNzEzW}
 ```
 
 ### New Learnings
-I learned how to use cat command to read a file with its absolute path  in linux terminal
+I learned when and how to use specific commands as per the required file type and location like hidden files,trapped files or delayed files.
 
 ### References
 
