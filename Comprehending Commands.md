@@ -117,7 +117,7 @@ I learned how to use grep command to search for a specific lines in a large file
 
 ### References
 
-## comparing two files
+## comparing files
 When looking for changes between similar files, eyeballing them might not be the most efficient approach! This is where the diff command becomes invaluable.
 
 diff compares two files line by line and shows you exactly what's different between them. For example:
@@ -366,7 +366,7 @@ Depending on what the clue says, head on over to the next directory (or don't!).
 Follow the clues to the flag!
 
 ### Solve
-**Flag:** `c`
+**Flag:** `pwn.college{kqNs6MB92DEw3B4S5Syl41o9Oeo.QX5IDO0wSN1gjNzEzW}`
  for this Challenge, i found the next clue files by follwing the hints given in present clue. these hints require me use ls -a for hidden clue files or needing to change the directory only then listing the files to obtain the clue file or even listing the files in a specific directory using its absolute path without changing the current dirtectory to get the clue file or simply list all files in a directory to find the clue file. After going through consecutive clue files, it finally lead to the flag.
  
 ```bash 
@@ -444,7 +444,7 @@ I learned when and how to use specific commands as per the required file type an
 
 ### References
 
-## making directory
+## making directories
 We can create files. How about directories? You make directories using the mkdir command. Then you can stick files in there!
 
 Watch:
@@ -527,7 +527,7 @@ Now it's your turn. I've hidden the flag in a random directory on the filesystem
 Several notes. First, there are other files named flag on the filesystem. Don't panic if the first one you try doesn't have the actual flag in it. Second, there're plenty of places in the filesystem that are not accessible to a normal user. These will cause find to generate errors, but you can ignore those; we won't hide the flag there! Finally, find can take a while; be patient!
 
 ### Solve
-**Flag:** ``
+**Flag:** `pwn.college{Ic-RhHmrXlVqQ1lPaM7KFXALwzb.QXyMDO0wSN1gjNzEzW}`
  for this Challenge, i used find command with search criteria as flag then catted one of the multiple flag files to get the correct flag.
 
 ```bash 
