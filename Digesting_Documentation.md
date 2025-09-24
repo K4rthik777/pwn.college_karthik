@@ -169,3 +169,108 @@ Correct usage! Your flag: pwn.college{8gzd--8WTMIhlM-B7bk-PUC3ZnG.QX1EDO0wSN1gjN
 I learned to navigate through the many diffferent options and search for a particular option in the manual of a command.
 
 ### References
+
+## Searching For Manuals
+This level is tricky: it hides the manpage for the challenge by randomizing its name. Luckily, all of the manpages are gathered in a searchable database, so you'll be able to search the man page database to find the hidden challenge man page! To figure out how to search for the right manpage, read the man page manpage by doing: man man!
+
+HINT 1: man man teaches you advanced usage of the man command itself, and you must use this knowledge to figure out how to search for the hidden manpage that will tell you how to use /challenge/challenge
+
+HINT 2: though the manpage is randomly named, you still actually use /challenge/challenge to get the flag!
+
+### Solve
+**Flag:** `pwn.college{0mmVo0SqsO8KOMSlnqF7SaHD57O.QX2EDO0wSN1gjNzEzW}`
+ for this Challenge, i used man man command to find the appropriate option to get the random manpage name. Then i found -f option and upon using it i got the hidden manpage and again used man command with that random name. This got me the option of /challenge/challenge that got me the flag.
+
+```bash 
+hacker@man~searching-for-manuals:~$ man man
+hacker@man~searching-for-manuals:~$ man -f /challenge/challenge
+mmoqslnqaw (1)       - print the flag!
+hacker@man~searching-for-manuals:~$ man mmoqslnqaw
+hacker@man~searching-for-manuals:~$ /challenge/challenge  --mmoqsl 008
+Correct usage! Your flag: pwn.college{0mmVo0SqsO8KOMSlnqF7SaHD57O.QX2EDO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how to use man command with man as argument to find various options that can be useful to find different manuals.
+
+### References
+
+## Helpful Programs
+Some programs don't have a man page, but might tell you how to run them if invoked with a special argument. Usually, this argument is --help, but it can often be -h or, in rare cases, -?, help, or other esoteric values like /? (though that latter is more frequently encountered on Windows).
+
+In this level, you will practice reading a program's documentation with --help. Try it out!
+
+### Solve
+**Flag:** `pwn.college{EYgNpLYSegvcaNVn2KFFKf953jU.QX3IDO0wSN1gjNzEzW}`
+ for this Challenge, i invoked the challenge program with --help argument and found -p agrument gives the value that is neccesary to use with the -g argument to get the flag.
+
+```bash 
+hacker@man~helpful-programs:~$ /challenge/challenge  --help
+usage: a challenge to make you ask for help [-h] [--fortune] [-v]
+                                            [-g GIVE_THE_FLAG] [-p]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --fortune             read your fortune
+  -v, --version         get the version number
+  -g GIVE_THE_FLAG, --give-the-flag GIVE_THE_FLAG
+                        get the flag, if given the correct value
+  -p, --print-value     print the value that will cause the -g option to
+                        give you the flag
+hacker@man~helpful-programs:~$ /challenge/challenge  -p
+The secret value is: 295
+hacker@man~helpful-programs:~$ /challenge/challenge  -g 295
+Correct usage! Your flag: pwn.college{EYgNpLYSegvcaNVn2KFFKf953jU.QX3IDO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned that special arguments like --help can be used to get information about a program's different arguments. 
+
+### References
+
+## Help for Builtins
+Some commands, rather than being programs with man pages and help options, are built into the shell itself. These are called builtins. Builtins are invoked just like commands, but the shell handles them internally instead of launching other programs. You can get a list of shell builtins by running the builtin help, as so:
+
+```bash
+hacker@dojo:~$ help
+```
+
+You can get help on a specific one by passing it to the help builtin. Let's look at a builtin that we've already used earlier, cd!
+
+```bash
+hacker@dojo:~$ help cd
+cd: cd [-L|[-P [-e]] [-@]] [dir]
+    Change the shell working directory.
+    
+    Change the current directory to DIR.  The default DIR is the value of the
+    HOME shell variable.
+...
+```
+
+Some good information! In this challenge, we'll practice using help to look up help for builtins. This challenge's challenge command is a shell builtin, rather than a program. Like before, you need to lookup its help to figure out the secret value to pass to it!
+
+### Solve
+**Flag:** `pwn.college{AWEUBC6A8CjnF4H01LWboTpWLNG.QX0ETO0wSN1gjNzEzW}`
+ for this Challenge, i used the help builtin with a shell builtin challenge and found the --secret option and the special value needed to get the flag.then i invoked the shell builtin with the --secret option and special option and got the flag.
+
+```bash 
+hacker@man~help-for-builtins:~$ help challenge
+challenge: challenge [--fortune] [--version] [--secret SECRET]
+    This builtin command will read you the flag, given the right arguments!
+
+    Options:
+      --fortune         display a fortune
+      --version         display the version
+      --secret VALUE    prints the flag, if VALUE is correct
+
+    You must be sure to provide the right value to --secret. That value
+    is "AWEUBC6A".
+hacker@man~help-for-builtins:~$ challenge --secret AWEUBC6A
+Correct! Here is your flag!
+pwn.college{AWEUBC6A8CjnF4H01LWboTpWLNG.QX0ETO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned to use the builtin help to get information about the diiferent arguments for a shell builtins
+
+### References
