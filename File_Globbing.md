@@ -151,3 +151,109 @@ pwn.college{UHPc99fToZYsXEJiB1ak0zxKV01.QX0IDO0wSN1gjNzEzW}
 I learned how [] works even with the absolute path of the files to match multiple filenames with similar pattern  with the characters within it .
 
 ### References
+
+## Multiple globs
+So far, you've specified one glob at a time, but you can do more! Bash supports the expansion of multiple globs in a single word. For example:
+
+```bash
+hacker@dojo:~$ cat /*fl*
+pwn.college{YEAH}
+hacker@dojo:~$
+```
+
+What happens above is that the shell looks for all files in / that start with anything (including nothing), then have an f and an l, and end in anything (including ag, which makes flag).
+
+Now you try it. We put a few happy, but diversely-named files in /challenge/files. Go cd there and run /challenge/run, providing a single argument: a short (3 characters or less) globbed word with two * globs in it that covers every word that contains the letter p.
+
+### Solve
+**Flag:** `pwn.college{UML_YMo_UZr4906qXMiQyqVTUb8.0lM3kjNxwSN1gjNzEzW}`
+ for this Challenge, i changed directory to /challenge/files and invoked /challenge/run with a arguments using two golbs with letter p to get the flag.
+
+```bash 
+hacker@globbing~multiple-globs:~$ cd /challenge/files
+hacker@globbing~multiple-globs:/challenge/files$ /challenge/run *p*
+You got it! Here is your flag!
+pwn.college{UML_YMo_UZr4906qXMiQyqVTUb8.0lM3kjNxwSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how two golbs can be used to search anything that has specified characters in their filename.
+
+### References
+
+## Mixing globs
+Now, let's put the previous levels together! We put a few happy, but diversely-named files in /challenge/files. Go cd there and, using the globbing you've learned, write a single, short (6 characters or less) glob that (when passed as an argument to /challenge/run) will match the files "challenging", "educational", and "pwning"!
+
+### Solve
+**Flag:** `pwn.college{QBHChdx0M7CJVBT8TxexBlclGwS.QX1IDO0wSN1gjNzEzW}`
+ for this Challenge, i changed directory to /challenge/files and invoked /challenge/run with a arguments using [] and * golbs with letters c,e,p to get the flag.
+
+```bash 
+hacker@globbing~mixing-globs:~$ cd /challenge/files
+hacker@globbing~mixing-globs:/challenge/files$ /challenge/run [cep]*
+You got it! Here is your flag!
+pwn.college{QBHChdx0M7CJVBT8TxexBlclGwS.QX1IDO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how multiple types of golbs can be used together to search anything that has specified characters in their filename.
+
+### References
+
+## Exclusionary globbing
+Sometimes, you want to filter out files in a glob! Luckily, [] helps you do just this. If the first character in the brackets is a ! or (in newer versions of bash) a ^, the glob inverts, and that bracket instance matches characters that aren't listed. For example:
+
+```bash
+hacker@dojo:~$ touch file_a
+hacker@dojo:~$ touch file_b
+hacker@dojo:~$ touch file_c
+hacker@dojo:~$ ls
+file_a	file_b	file_c
+hacker@dojo:~$ echo Look: file_[!ab]
+Look: file_c
+hacker@dojo:~$ echo Look: file_[^ab]
+Look: file_c
+hacker@dojo:~$ echo Look: file_[ab]
+Look: file_a file_b
+```
+
+Armed with this knowledge, go forth to /challenge/files and run /challenge/run with all files that don't start with p, w, or n!
+
+NOTE: The ! character has a different special meaning in bash when it's not the first character of a [] glob, so keep that in mind if things stop making sense! ^ does not have this problem, but is also not compatible with older shells.
+
+### Solve
+**Flag:** `pwn.college{MYCAF44BeriHxG1hJiixxeFFa8W.QX2IDO0wSN1gjNzEzW}`
+ for this Challenge, i changed directory to /challenge/files and invoked /challenge/run with a arguments using [] and * golbs with ! used before the letters p,w,n to get the flag.
+
+```bash 
+hacker@globbing~mixing-globs:~$ cd /challenge/files
+hacker@globbing~exclusionary-globbing:/challenge/files$ /challenge/run [!pwn]*
+You got it! Here is your flag!
+pwn.college{MYCAF44BeriHxG1hJiixxeFFa8W.QX2IDO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how ! and ^ golbs can be used with [] glob to exlude anything that has specified characters in their filename.
+
+### References
+
+## Tab completion on commands
+Tab completion is for more than files! You can also tab-complete commands. This level has a command that starts with pwncollege, and it'll give you the flag. Type pwncollege and hit the tab key to auto-complete it!
+
+NOTE: You can auto-complete any command, but be careful: callous auto-completes without double-checking the result can wreak havoc in your shell if you accidentally run the wrong commands!
+
+### Solve
+**Flag:** `pwn.college{U79iPtCd3TsGJUEG_QFwYL2jV_7.0VN0EzNxwSN1gjNzEzW}`
+ for this Challenge, i wrote pwncollege command and then used tab to auto complete the command and executed the command to get the flag.
+
+```bash 
+hacker@globbing~tab-completion-on-commands:~$ pwncollege-25290
+Correct! Here is your flag:
+pwn.college{U79iPtCd3TsGJUEG_QFwYL2jV_7.0VN0EzNxwSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how tab can also be used to auto complete commands.
+
+### References
+
