@@ -401,3 +401,118 @@ I learned how grep -v can be used to filter out and find out unmatched lines.
 
 ### References 
 
+## Filtering with grep -v
+When you pipe data from one command to another, you of course no longer see it on your screen. This is not always desired: for example, you might want to see the data as it flows through between your commands to debug unintended outcomes (e.g., "why did that second command not work???").
+
+Luckily, there is a solution! The tee command, named after a "T-splitter" from plumbing pipes, duplicates data flowing through your pipes to any number of files provided on the command line. For example:
+
+```bash
+hacker@dojo:~$ echo hi | tee pwn college
+hi
+hacker@dojo:~$ cat pwn
+hi
+hacker@dojo:~$ cat college
+hi
+hacker@dojo:~$
+```
+
+As you can see, by providing two files to tee, we ended up with three copies of the piped-in data: one to stdout, one to the pwn file, and one to the college file. You can imagine how you might use this to debug things going haywire:
+
+```bash
+hacker@dojo:~$ command_1 | command_2
+Command 2 failed!
+hacker@dojo:~$ command_1 | tee cmd1_output | command_2
+Command 2 failed!
+hacker@dojo:~$ cat cmd1_output
+Command 1 failed: must pass --succeed!
+hacker@dojo:~$ command_1 --succeed | command_2
+Commands succeeded!
+```
+
+Now, you try it! This process' /challenge/pwn must be piped into /challenge/college, but you'll need to intercept the data to see what pwn needs from you!
+
+### Solve
+**Flag:** `pwn.college{gFBrO8hxdIXWoDFE0O4pb-AkbV3.QXxITO0wSN1gjNzEzW}`
+ for this Challenge, i ran /challenge/pwn with (|) pipe operator and used tee with pwn_output file with (|) pipe operator with /challenge/college. Then catted the pwn_output file to get the secret argument and value . Finally i ran the /challenge/run --secret gFBrO8hx with (|) pipe operator with /challenge/college to get the flag.
+
+```bash 
+hacker@piping~duplicating-piped-data-with-tee:~$ /challenge/pwn | tee pwn_output | /challenge/college
+Processing...
+WARNING: you are overwriting file pwn_output with tee's output...
+The input to 'college' does not contain the correct secret code! This code
+should be provided by the 'pwn' command. HINT: use 'tee' to intercept the
+output of 'pwn' and figure out what the code needs to be.
+hacker@piping~duplicating-piped-data-with-tee:~$ cat pwn_output
+Usage: /challenge/pwn --secret [SECRET_ARG]
+
+SECRET_ARG should be "gFBrO8hx"
+
+hacker@piping~duplicating-piped-data-with-tee:~$ /challenge/pwn --secret gFB
+rO8hx | /challenge/college
+Processing...
+Correct! Passing secret value to /challenge/college...
+Great job! Here is your flag:
+pwn.college{gFBrO8hxdIXWoDFE0O4pb-AkbV3.QXxITO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how tee command can be used to split the output simultaneously to mutliple files.
+
+### References 
+
+## Process substitution for input
+Sometimes you need to compare the output of two commands rather than two files. You might think to save each output to a file first:
+
+```bash
+hacker@dojo:~$ command1 > file1
+hacker@dojo:~$ command2 > file2
+hacker@dojo:~$ diff file1 
+```
+
+But there's a more elegant way! Linux follows the philosophy that "everything is a file". That is, the system strives to provide file-like access to most resources, including the input and output of running programs! The shell follows this philosophy, allowing you to, for example, use any utility that takes file arguments on the command line and hook it up to the output of programs, as you learned in the previous few levels.
+
+Interestingly, we can go further, and hook input and output of programs to arguments of commands. This is done using Process Substitution. For reading from a command (input process substitution), use <(command). When you write <(command), bash will run the command and hook up its output to a temporary file that it will create. This isn't a real file, of course, it's what's called a named pipe, in that it has a file name:
+
+```bash
+hacker@dojo:~$ echo <(echo hi)
+/dev/fd/63
+hacker@dojo:~$
+```
+
+Where did /dev/fd/63 come from? bash replaced <(echo hi) with the path of the named pipe file that's hooked up to the command's output! While the command is running, reading from this file will read data from the standard output of the command. Typically, this is done using commands that take input files as arguments:
+
+```bash
+hacker@dojo:~$ cat <(echo hi)
+hi
+hacker@dojo:~$
+```
+
+Of course, you can specify this multiple times:
+
+```bash
+hacker@dojo:~$ echo <(echo pwn) <(echo college)
+/dev/fd/63 /dev/fd/64
+hacker@dojo:~$ cat <(echo pwn) <(echo college)
+pwn
+college
+hacker@dojo:~$
+``` 
+
+Now for your challenge! Recall what you learned in the diff challenge from Comprehending Commands. In that challenge, you diffed two files. Now, you'll diff two sets of command outputs: /challenge/print_decoys, which will print a bunch of decoy flags, and /challenge/print_decoys_and_flag which will print those same decoys plus the real flag.
+
+Use process substitution with diff to compare the outputs of these two programs and find your flag!
+
+### Solve
+**Flag:** `pwn.college{MpyFMAXHGJNQX_SaYef9Q8tezLK.0lNwMDOxwSN1gjNzEzW}`
+ for this Challenge, i ran diff command with <(/challenge/print_decoys) and <(/challenge/print_decoys_and_flag) to get the flag.
+
+```bash 
+hacker@piping~process-substitution-for-input:~$ diff <(/challenge/print_decoys) <(/challenge/print_decoys_and_flag)
+12a13
+> pwn.college{MpyFMAXHGJNQX_SaYef9Q8tezLK.0lNwMDOxwSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how <(command) can be to create named piped file to hook up a command's output and then be used as input for another command .
+
+### References 
