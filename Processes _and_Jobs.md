@@ -347,3 +347,279 @@ I learned how to kill any clogging process can be used to interrupt any process.
 
 ### References
 
+## Suspending Processes
+You have learned to interrupt processes with Ctrl-C, but there are less drastic measures you can use to get your terminal back! You can suspend processes to the background with Ctrl-Z. In this level, we'll explore how this works and, in the next level, we'll figure out how to resume those suspended processes!
+
+This level's run wants to see another copy of itself running and using the same terminal. How? Use the terminal to launch it, then suspend it, then launch another copy while the first is suspended!
+
+### Solve
+**Flag:** `pwn.college{I_CTEl0uMIoLu5Q0yCk_lPGrRE7.QX1QDO0wSN1gjNzEzW}`
+ for this Challenge, i ran /challenge/run then used Ctrl+z to interrupt its process and then again ran /challenge/run to get the flag.
+
+```bash 
+hacker@processes~suspending-processes:~$ /challenge/run
+I'll only give you the flag if there's already another copy of me running in
+this terminal... Let's check!
+
+UID          PID    PPID  C STIME TTY          TIME CMD
+root         161     152  0 18:01 pts/1    00:00:00 bash /challenge/run
+root         163     161  0 18:01 pts/1    00:00:00 ps -f
+
+I don't see a second me!
+
+To pass this level, you need to suspend me and launch me again! You can
+background me with Ctrl-Z or, if you're not ready to do that for whatever
+reason, just hit Enter and I'll exit!
+^Z
+[1]+  Stopped                 /challenge/run
+hacker@processes~suspending-processes:~$ /challenge/run
+I'll only give you the flag if there's already another copy of me running in
+this terminal... Let's check!
+
+UID          PID    PPID  C STIME TTY          TIME CMD
+root         161     152  0 18:01 pts/1    00:00:00 bash /challenge/run
+root         168     152  0 18:01 pts/1    00:00:00 bash /challenge/run
+root         170     168  0 18:01 pts/1    00:00:00 ps -f
+
+Yay, I found another version of me! Here is the flag:
+pwn.college{I_CTEl0uMIoLu5Q0yCk_lPGrRE7.QX1QDO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how Ctrl+Z can be used to suspend any running process.
+
+### References
+
+## Resuming Processes
+Usually, when you suspend processes, you'll want to resume them at some point. Otherwise, why not just terminate them? To resume processes, your shell provides the fg command, a builtin that takes the suspended process, resumes it, and puts it back in the foreground of your terminal.
+
+Go try it out! This challenge's run needs you to suspend it, then resume it. Good luck!
+
+### Solve
+**Flag:** `pwn.college{4q2ke2iry6l35oYxWmeWjfQscGn.QX2QDO0wSN1gjNzEzW}`
+ for this Challenge, i ran /challenge/run then used Ctrl+z to interrupt its process and then again ran fg command to resume the suspended process to get the flag.
+
+```bash 
+hacker@processes~resuming-processes:~$ /challenge/run
+Let's practice resuming processes! Suspend me with Ctrl-Z, then resume me with
+the 'fg' command! Or just press Enter to quit me!
+^Z
+[1]+  Stopped                 /challenge/run
+hacker@processes~resuming-processes:~$ fg
+/challenge/run
+I'm back! Here's your flag:
+pwn.college{4q2ke2iry6l35oYxWmeWjfQscGn.QX2QDO0wSN1gjNzEzW}
+Don't forget to press Enter to quit me!
+
+Goodbye!
+```
+
+### New Learnings
+I learned how fg command can be used to resume any suspended process.
+
+### References
+
+## Backgrounding Processes
+You've resumed processes in the foreground with the fg command. You can also resume processes in the background with the bg command! This will allow the process to keep running, while giving you your shell back to invoke more commands in the meantime.
+
+This level's run wants to see another copy of itself running, not suspended, and using the same terminal. How? Use the terminal to launch it, then suspend it, then background it with bg and launch another copy while the first is running in the background!
+
+ARCANUM: If you're interested in some deeper details, check out how to view the differences between suspended and backgrounded properties! Allow me to demonstrate. First, let's suspend a sleep:
+
+```bash
+hacker@dojo:~$ sleep 1337
+^Z
+[1]+  Stopped                 sleep 1337
+hacker@dojo:~$
+```
+
+The sleep process is now suspended in the background. We can see this with ps by enabling the stat column output with the -o option:
+
+```bash
+hacker@dojo:~$ ps -o user,pid,stat,cmd
+USER         PID STAT CMD
+hacker       702 Ss   bash
+hacker       762 T    sleep 1337
+hacker       782 R+   ps -o user,pid,stat,cmd
+hacker@dojo:~$ 
+```
+
+See that T? That means that the process is suspended due to our Ctrl-Z. The S in bash's STAT column means that bash is sleeping while waiting for input. The R in ps's column means that it's actively running, and the + means that it's in the foreground!
+
+Watch what happens when we resume sleep in the background:
+
+```bash
+hacker@dojo:~$ bg
+[1]+ sleep 1337 &
+hacker@dojo:~$ ps -o user,pid,stat,cmd
+USER         PID STAT CMD
+hacker       702 Ss   bash
+hacker       762 S    sleep 1337
+hacker      1224 R+   ps -o user,pid,stat,cmd
+hacker@dojo:~$
+```
+
+Boom! The sleep now has an S. It's sleeping while, well, sleeping, but it's not suspended! It's also in the background and thus doesn't have the +.
+
+### Solve
+**Flag:** `pwn.college{MUpYa78iYfMr4AJcYqxa2KKQ7gq.QX3QDO0wSN1gjNzEzW}`
+ for this Challenge, i ran /challenge/run then used Ctrl+z to interrupt its process and then again ran bg command to resume the suspended process in the background and then ran the /challenge/run again to get the flag.
+
+```bash 
+hacker@processes~backgrounding-processes:~$ /challenge/run
+I'll only give you the flag if there's already another copy of me running *and
+not suspended* in this terminal... Let's check!
+
+UID          PID STAT CMD
+root         161 S+   bash /challenge/run
+root         163 R+   ps -o user=UID,pid,stat,cmd
+
+I don't see a second me!
+
+To pass this level, you need to suspend me, resume the suspended process in the
+background, and then launch a new version of me! You can background me with
+Ctrl-Z (and resume me in the background with 'bg') or, if you're not ready to
+do that for whatever reason, just hit Enter and I'll exit!
+^Z
+[1]+  Stopped                 /challenge/run
+hacker@processes~backgrounding-processes:~$ bg
+[1]+ /challenge/run &
+hacker@processes~backgrounding-processes:~$
+
+
+Yay, I'm now running the background! Because of that, this text will probably
+overlap weirdly with the shell prompt. Don't panic; just hit Enter a few times
+to scroll this text out.
+
+hacker@processes~backgrounding-processes:~$ /challenge/run
+I'll only give you the flag if there's already another copy of me running *and
+not suspended* in this terminal... Let's check!
+
+UID          PID STAT CMD
+root         161 S    bash /challenge/run
+root         171 S    sleep 6h
+root         172 S+   bash /challenge/run
+root         174 R+   ps -o user=UID,pid,stat,cmd
+
+Yay, I found another version of me running in the background! Here is the flag:
+pwn.college{MUpYa78iYfMr4AJcYqxa2KKQ7gq.QX3QDO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how bg command can be used to resume any suspended process in the background.
+
+### References
+
+## Foregrounding Proceses
+Imagine that you have a backgrounded process, and you want to mess with it some more. What do you do? Well, you can foreground a backgrounded process with fg just like you foreground a suspended process! This level will walk you through that!
+
+### Solve
+**Flag:** `pwn.college{UhTS8IRDJBSJt7IOjPkI2x4bVIn.QX4QDO0wSN1gjNzEzW}`
+ for this Challenge, i ran /challenge/run then used Ctrl+z to interrupt its process and then again ran bg command to resume the suspended process in the background and then ran fg again to get the flag.
+
+```bash 
+hacker@processes~foregrounding-processes:~$ /challenge/run
+To pass this level, you need to suspend me, resume the suspended process in the
+background, and *then* foreground it without re-suspending it! You can
+background me with Ctrl-Z (and resume me in the background with 'bg') or, if
+you're not ready to do that for whatever reason, just hit Enter and I'll exit!
+^Z
+[1]+  Stopped                 /challenge/run
+hacker@processes~foregrounding-processes:~$ bg
+[1]+ /challenge/run &
+hacker@processes~foregrounding-processes:~$
+
+
+Yay, I'm now running the background! Because of that, this text will probably
+overlap weirdly with the shell prompt. Don't panic; just hit Enter a few times
+to scroll this text out. After that, resume me into the foreground with 'fg';
+I'll wait.
+
+hacker@processes~foregrounding-processes:~$ fg
+/challenge/run
+YES! Great job! I'm now running in the foreground. Hit Enter for your flag!
+
+pwn.college{UhTS8IRDJBSJt7IOjPkI2x4bVIn.QX4QDO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how fg command can be used to bring back any backgrounded process to the foreground.
+
+### References
+
+## Starting Backgrounded Processes
+Of course, you don't have to suspend processes to background them: you can start them backgrounded right off the bat! It's easy; all you have to do is append a & to the command, like so:
+
+```bash
+hacker@dojo:~$ sleep 1337 &
+[1] 1771
+hacker@dojo:~$ ps -o user,pid,stat,cmd
+USER         PID STAT CMD
+hacker      1709 Ss   bash
+hacker      1771 S    sleep 1337
+hacker      1782 R+   ps -o user,pid,stat,cmd
+hacker@dojo:~$ 
+```
+
+Here, sleep is actively running in the background, not suspended. Now it's your turn to practice! Launch /challenge/run backgrounded for the flag!
+
+### Solve
+**Flag:** `pwn.college{ccyBHE0Ce3Q0ALwr68iH-HlsrGZ.QX5QDO0wSN1gjNzEzW}`
+ for this Challenge, i ran /challenge/run with & appended at the end to start it in background to get the flag.
+
+```bash 
+hacker@processes~starting-backgrounded-processes:~$ /challenge/run &
+[1] 170
+hacker@processes~starting-backgrounded-processes:~$
+
+
+Yay, you started me in the background! Because of that, this text will probably
+overlap weirdly with the shell prompt, but you're used to that by now...
+
+Anyways! Here is your flag!
+pwn.college{ccyBHE0Ce3Q0ALwr68iH-HlsrGZ.QX5QDO0wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how & can be appended to a command to start it in background.
+
+### References
+
+## Process Exit Codes
+Every shell command, including every program and every builtin, exits with an exit code when it finishes running and terminates. This can be used by the shell, or the user of the shell (that's you!) to check if the process succeeded in its functionality (this determination, of course, depends on what the process is supposed to do in the first place).
+
+You can access the exit code of the most recently-terminated command using the special ? variable (don't forget to prepend it with $ to read its value!):
+
+```bash
+hacker@dojo:~$ touch test-file
+hacker@dojo:~$ echo $?
+0
+hacker@dojo:~$ touch /test-file
+touch: cannot touch '/test-file': Permission denied
+hacker@dojo:~$ echo $?
+1
+hacker@dojo:~$
+```
+
+As you can see, commands that succeed typically return 0 and commands that fail typically return a non-zero value, most commonly 1 but sometimes an error code that identifies a specific failure mode.
+
+In this challenge, you must retrieve the exit code returned by /challenge/get-code and then run /challenge/submit-code with that error code as an argument. Good luck!
+
+### Solve
+**Flag:** `pwn.college{IDTx1Rqe07OJTzfgTw_98t4VvNX.QX5YDO1wSN1gjNzEzW}`
+ for this Challenge, i ran /challenge/get-code and then i used echo command with $? to get the exit code of /challenge/get-code. Finally i ran /challenge/submit-code with that code as argument to get the flag.
+
+```bash 
+hacker@processes~process-exit-codes:~$ /challenge/get-code
+Exiting with an error code!
+hacker@processes~process-exit-codes:~$ echo $?
+170
+hacker@processes~process-exit-codes:~$ /challenge/submit-code 170
+CORRECT! Here is your flag:
+pwn.college{IDTx1Rqe07OJTzfgTw_98t4VvNX.QX5YDO1wSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how echo command with $? as argument can be used to get the most recently command/program.
+
+### References
