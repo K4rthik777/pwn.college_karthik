@@ -401,7 +401,7 @@ I learned how grep -v can be used to filter out and find out unmatched lines.
 
 ### References 
 
-## Filtering with grep -v
+## Duplicating piped data with tee
 When you pipe data from one command to another, you of course no longer see it on your screen. This is not always desired: for example, you might want to see the data as it flows through between your commands to debug unintended outcomes (e.g., "why did that second command not work???").
 
 Luckily, there is a solution! The tee command, named after a "T-splitter" from plumbing pipes, duplicates data flowing through your pipes to any number of files provided on the command line. For example:
@@ -612,7 +612,7 @@ I learned how >(command) can be to create named piped file to hook up multiple c
 
 ### References
 
-## Writing to multiple programs
+## Split-piping stderr and stdout
 Now, let's put your knowledge together. You must master the ultimate piping task: redirect stdout to one program and stderr to another.
 
 The challenge here, of course, is that the | operator links the stdout of the left command with the stdin of the right command. Of course, you've used 2>&1 to redirect stderr into stdout and, thus, pipe stderr over, but this then mixes stderr and stdout. How to keep it unmixed?
@@ -642,7 +642,6 @@ I learned how > >(command) and 2> >(command) can be used to redirect the stdout 
 
 ### References
 
-## Writing to multiple programs
 Now you've learned that process substitution can make command output appear as files for reading with <(command). But you can also use process substitution for writing to commands!
 
 You can duplicate data to two files with tee:
