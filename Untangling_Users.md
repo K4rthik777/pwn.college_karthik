@@ -1,4 +1,4 @@
-# Untangling Userd
+# Untangling User
 
 ## Becoming root with su
 It's not just hackers that need to become root. Oftentimes, you, as the owner of your computer, need to use root access to administer it. Becoming root is a fairly common action that Linux users take, and there are two utilities that exist for this purpose: su and sudo.
