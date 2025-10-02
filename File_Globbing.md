@@ -237,6 +237,82 @@ I learned how ! and ^ golbs can be used with [] glob to exlude anything that has
 
 ### References
 
+## Tab completion 
+As tempting as it might be, using * to shorten what must be typed on the commandline can lead to mistakes. Your glob might expand to unintended files, and you might not spot it until the rm command is already running! No one is safe from this style of error.
+
+A safer alternative when you are trying to specify a specific target is tab completion. If you hit tab in the shell, it'll try to figure out what you're going to type and automatically complete it. Auto-completion is super useful, and this challenge will explore its use in specifying files.
+
+This challenge has copied the flag into /challenge/pwncollege, and you can freely cat that file. But you can't type the filename: we used some serious trickery to make sure that you must tab-complete it. Try it out!
+
+```bash
+hacker@dojo:~$ ls /challenge
+DESCRIPTION.md  pwncollege
+hacker@dojo:~$ cat /challenge/pwncollege
+cat: /challenge/pwncollege: No such file or directory
+hacker@dojo:~$ cat /challenge/pwn<TAB>
+pwn.college{HECK YEAH}
+hacker@dojo:~$
+```
+
+When you hit that tab key, the name will expand and you'll be able to read the file. Good luck!
+
+### Solve
+**Flag:** `pwn.college{UHN6POSPLMPhYT8cKz3nkhPOELe.0FN0EzNxwSN1gjNzEzW}`
+ for this Challenge, i wrote cat command with pwn then used tab to auto complete the argument and executed the command to get the flag.
+
+```bash 
+hacker@globbing~tab-completion:~$ cat /challenge/pwncollege​
+pwn.college{UHN6POSPLMPhYT8cKz3nkhPOELe.0FN0EzNxwSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how tab can be used to auto complete filenames .
+
+### References
+
+## Multiple options for tab completion
+Consider the following situation:
+
+```bash
+hacker@dojo:~$ ls
+flag  flamingo  flowers
+hacker@dojo:~$ cat f<TAB>
+```
+
+There are multiple options! What happens?
+
+What happens varies based on the specific shell and its options. By default bash will auto-expand until the first point when there are multiple options (in this case, fl). When you hit tab a second time, it'll print out those options. Other shells and configurations, instead, will cycle through the options.
+
+This challenge has a /challenge/files directory with a bunch of files starting with pwncollege. Tab-complete from /challenge/files/p or so, and make your way to the flag!
+
+### Solve
+**Flag:** `pwn.college{oaluj_RlkQoB4rXNewIBarCJcfq.0lN0EzNxwSN1gjNzEzW}`
+ for this Challenge, i wrote cat command with /challenge/files/p then clicked tab twice to get all options for the argument and did the same untile i found the correct file and upon catting that file i got the flag.
+
+```bash 
+hacker@globbing~multiple-options-for-tab-completion:~$ cat /challenge/files/pwn
+pwn                    pwncollege-family      pwncollege-flyswatter
+pwn-college            pwncollege-flag        pwncollege-hacking
+pwn-the-planet         pwncollege-flamingo
+hacker@globbing~multiple-options-for-tab-completion:~$ cat /challenge/files/pwncollege-f
+pwncollege-family      pwncollege-flamingo
+pwncollege-flag        pwncollege-flyswatter
+hacker@globbing~multiple-options-for-tab-completion:~$ cat /challenge/files/pwncollege-
+pwncollege-family      pwncollege-flamingo    pwncollege-hacking
+pwncollege-flag        pwncollege-flyswatter
+hacker@globbing~multiple-options-for-tab-completion:~$ cat /challenge/files/pwncollege-fl
+pwncollege-flag        pwncollege-flamingo    pwncollege-flyswatter
+hacker@globbing~multiple-options-for-tab-completion:~$ cat /challenge/files/pwncollege-fla
+pwncollege-flag      pwncollege-flamingo
+hacker@globbing~multiple-options-for-tab-completion:~$ cat /challenge/files/pwncollege-flag
+pwn.college{oaluj_RlkQoB4rXNewIBarCJcfq.0lN0EzNxwSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how double clicking tab can be used to show all options that can be used.
+
+### References
+
 ## Tab completion on commands
 Tab completion is for more than files! You can also tab-complete commands. This level has a command that starts with pwncollege, and it'll give you the flag. Type pwncollege and hit the tab key to auto-complete it!
 
