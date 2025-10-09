@@ -264,11 +264,5 @@ As hinted in the description i found about the UNIVAC 1100 series FIELDATA code.
 
 Flag: ```bash citadel{r3b3ll10n$&BU1lt:0nH0p3}```
 
-# Shinsu DEXquest
-As you climb the path, a guardian emerges, its form shifting between the visage of a long-dead climber and a metallic sentinel. It moves with a strange grace, holding out a cartridge containing a single file. You realize the file is compatible with the device you carry and may be the key to continue your ascent toward the Citadel’s heart.
 
-## Solve
- As the given file is an apk we need to view it both in mobile and pc to better analyse it. So this apk source code can be view in jadx application and in the mobile there are different pages and requires a sepcific number to allow us to enter the barrier . So we need to look for main activity of the pages. So in this MainActivity the Room class has been refered so going there we find five more classes value,barrier,nextroom,entrance. When we check vault class we find a program that check the digits of entered number we need to unlock. So we need a program to reverse this logic and then we the correct number. This allows us to enter the barrier page and then we get the flag. 
-
-Flag: ```bash citadel{f33ls_g00d_to_n0t_g3t_d33p_fr13d}```
 
