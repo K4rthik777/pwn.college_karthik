@@ -272,10 +272,3 @@ As you climb the path, a guardian emerges, its form shifting between the visage 
 
 Flag: ```bash citadel{f33ls_g00d_to_n0t_g3t_d33p_fr13d}```
 
-# The Cake is a Matrix
-You enter this floor to find a vast dining hall, sterile and impossibly clean. At the head of the table sits a towering mechanical guardian, cables coiled like a throne, her single glowing eye fixed on you. On her plate there seems to be a matrix of symbols masquerading as dessert that are generated from a program beside her. Her voice floats across the hall, sweet and mocking: “Go on… eat. I insist. The cake is… well, something else entirely.” Maybe by deciphering the matrix, you might unlock the key to the next floor?
-
-## Solve
-
-
-Flag: ```bash ```
