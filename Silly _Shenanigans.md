@@ -202,6 +202,229 @@ logout
 ```
 
 ### New Learnings
-I learned how the a symbolic link can used in a .bashrc script to exploit the user to execute a some other program which the use has the permission.
+I learned how a symbolic link can used in a .bashrc script to exploit the user to execute a some other program which the use has the permission.
+
+### References
+
+## Sniffing Process Arguments
+Poor Zardus; you've hacked him pretty heavily. But he's wisened up and secured his home directory! Game over?
+
+Not quite! One of the things that people often don't think about when there are multiple accounts on one computer is what kind of data their command invocations leak. Remember, when you do ps aux, you get:
+
+```bash
+hacker@dojo:~$ ps aux
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+hacker         1  0.0  0.0   1128     4 ?        Ss   05:34   0:00 /sbin/docker-init -- /bin/sleep 6h
+hacker         7  0.0  0.0   2736   580 ?        S    05:34   0:00 /bin/sleep 6h
+hacker       102  0.4  0.0 723944 64660 ?        Sl   05:34   0:00 /usr/lib/code-server/lib/node /usr/lib/code-serve
+hacker       138  3.3  0.0 968792 106272 ?       Sl   05:34   0:07 /usr/lib/code-server/lib/node /usr/lib/code-serve
+hacker       287  0.0  0.0 717648 53136 ?        Sl   05:34   0:00 /usr/lib/code-server/lib/node /usr/lib/code-serve
+hacker       318  3.3  0.0 977472 98256 ?        Sl   05:34   0:06 /usr/lib/code-server/lib/node --dns-result-order=
+hacker       554  0.4  0.0 650560 55360 ?        Rl   05:35   0:00 /usr/lib/code-server/lib/node /usr/lib/code-serve
+hacker       571  0.0  0.0   4600  4032 pts/0    Ss   05:35   0:00 /usr/bin/bash --init-file /usr/lib/code-server/li
+hacker      1172  0.0  0.0   5892  2924 pts/0    R+   05:38   0:00 ps aux
+hacker@dojo:~$
+```
+But what would happen if one of the arguments of one of those commands was something sensitive, like the flag or a password? This happens, and nefarious users sharing the same machine (or somehow otherwise listing processes on it) can steal that data and use it!
+
+That's what this challenge explores. Zardus is using an automation script, passing his account password to it as an argument. Zardus is also allowed to use sudo (and, thus, to sudo cat /flag!). Steal the password, log in to Zardus' account (recall the su command from the Untangling Users module), and get that flag!
+
+### Solve
+**Flag:** `pwn.college{kePP5nbRdLbE5cIpZrOamw3luwN.0FOzEzNxwSN1gjNzEzW}`
+ for this Challenge,i found that /challenge/victim has been modified to /challenge/bin/auto.sh by checking all the directories in /challenges. Then i ran /challenge/bin/auto.sh and theni again ran /challenge/bin/auto.sh chaining with ps aux using & to find the command with the password as argument.I found the password and then i logged in as zardus and sudo catted the /flag .
+
+```bash 
+hacker@shenanigans~sniffing-process-arguments:~$ /challenge/bin/auto.sh
+This isn't the way to get the flag! If you already sniffed Zardus' password, use 'su' to log into his account and his 'sudo' access to cat the flag!
+^Z
+[5]+  Stopped                 /challenge/bin/auto.sh
+hacker@shenanigans~sniffing-process-arguments:~$ /challenge/bin/auto.sh & ps aux
+[6] 240
+This isn't the way to get the flag! If you already sniffed Zardus' password, use 'su' to log into his account and his 'sudo' access to cat the flag!
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.0   1056   640 ?        Ss   19:17   0:00 /sbin/docker-init -- /nix/var/nix/profiles/dojo-workspace/bin/dojo-init /run/dojo/bin/sle
+root           7  0.0  0.0 231708  2560 ?        S    19:17   0:00 /run/dojo/bin/sleep 6h
+root         147  0.0  0.0   5204  3520 ?        S    19:17   0:00 su -c auto.sh --user zardus --pass pw_1933626506 zardus
+zardus       151  0.0  0.0   4132  2560 ?        Ss   19:17   0:00 /bin/bash /run/challenge/bin/auto.sh --user zardus --pass pw_1933626506
+zardus       152  0.0  0.0 231708  2560 ?        S    19:17   0:00 sleep 6h
+hacker       156  0.0  0.0 231576  3520 pts/0    Ss   19:17   0:00 /nix/store/0nxvi9r5ymdlr2p24rjj9qzyms72zld1-bash-interactive-5.2p37/bin/bash /run/dojo/bi
+hacker       162  0.0  0.0 232456  4480 pts/0    S    19:17   0:00 /run/dojo/bin/bash --login
+hacker       180  0.0  0.0  36972 21760 ?        Sl   19:17   0:00 /nix/store/g0q8n7xfjp7znj41hcgrq893a9m0i474-ttyd-1.7.7/bin/ttyd --port 7681 --interface 0
+hacker       184  0.0  0.0 231940  4160 pts/1    Ss+  19:17   0:00 /run/dojo/bin/bash --login
+hacker       200  0.0  0.0   5656  2560 pts/0    T    19:21   0:00 /bin/bash /challenge/bin/auto.sh
+hacker       201  0.0  0.0 231708  2560 pts/0    T    19:21   0:00 sleep 6h
+hacker       210  0.0  0.0   5656  2880 pts/0    T    19:27   0:00 /bin/bash /challenge/bin/auto.sh
+hacker       211  0.0  0.0 231708  2560 pts/0    T    19:27   0:00 sleep 6h
+hacker       213  0.0  0.0   5656  2880 pts/0    S    19:29   0:00 /bin/bash /challenge/bin/auto.sh
+hacker       215  0.0  0.0 231708  2560 pts/0    S    19:29   0:00 sleep 6h
+hacker       235  0.0  0.0   5656  2880 pts/0    S    19:31   0:00 /bin/bash /challenge/bin/auto.sh
+hacker       237  0.0  0.0 231708  2560 pts/0    S    19:31   0:00 sleep 6h
+hacker       238  0.0  0.0   5656  2880 pts/0    T    19:31   0:00 /bin/bash /challenge/bin/auto.sh
+hacker       239  0.0  0.0 231708  2560 pts/0    T    19:31   0:00 sleep 6h
+hacker       240  0.0  0.0   5656  2880 pts/0    S    19:31   0:00 /bin/bash /challenge/bin/auto.sh
+hacker       241  0.0  0.0 233600  3840 pts/0    R+   19:31   0:00 ps aux
+hacker       242  0.0  0.0 231708  2560 pts/0    S    19:31   0:00 sleep 6h
+hacker@shenanigans~sniffing-process-arguments:~$ su zardus
+Password:
+zardus@shenanigans~sniffing-process-arguments:/home/hacker$ sudo cat /flag
+pwn.college{kePP5nbRdLbE5cIpZrOamw3luwN.0FOzEzNxwSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how sensitive data can be found as process arguments and how to get to that data by checking while a particular process has been executed.
+
+### References
+
+## Snooping on Configurations
+Even without making mistakes, users might inadvertently leave themselves at risk. For example, many files in a typical user's home directory are world-readable by default, despite frequently being used to store sensitive information. Believe it or not, your .bashrc is world-readable unless you explicitly change it!
+
+hacker@dojo:~$ ls -l ~/.bashrc
+-rw-r--r-- 1 hacker hacker 148 Jun  7 05:56 /home/hacker/.bashrc
+hacker@dojo:~$
+You might think, "Hey, at least it's not world-writable by default"! But even world-readable, it can do damage. Since .bashrc is processed by the shell at startup, that is where people typically put initializations for any environment variables they want to customize. Most of the time, this is innocuous things like PATH, but sometimes people store API keys there for easy access. For example, in this challenge:
+
+zardus@dojo:~$ echo "FLAG_GETTER_API_KEY=sk-XXXYYYZZZ" > ~/.bashrc
+Afterwards, Zardus can easily refer to the API key. In this level, users can use a valid API key to get the flag:
+
+zardus@dojo:~$ flag_getter --key $FLAG_GETTER_API_KEY
+Correct API key! Do you want me to print the key (y/n)? y
+pwn.college{HACKED}
+zardus@dojo:~$
+Naturally, Zardus stores his key in .bashrc. Can you steal the key and get the flag?
+
+NOTE: When you get the API key, just execute flag_getter as the hacker user. This challenge's /challenge/victim is just for theming: you don't need to use it.
+
+### Solve
+**Flag:** `pwn.college{wQiOPfAMEVugYzFifnx_1UqYX6G.0lM0EzNxwSN1gjNzEzW}`
+ for this Challenge,i catted the zardus' .bashrc and found the api key at the end and then i ran the flag_checker with this key to get the flag .
+
+```bash 
+hacker@shenanigans~snooping-on-configurations:~$ cat /home/zardus/.bashrc
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+#force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
+    else
+        color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+FLAG_GETTER_API_KEY=sk-3074312596
+hacker@shenanigans~snooping-on-configurations:~$ flag_getter --key sk-3074312596
+Correct API key! Do you want me to print the flag (y/n)?
+y
+pwn.college{wQiOPfAMEVugYzFifnx_1UqYX6G.0lM0EzNxwSN1gjNzEzW}
+```
+
+### New Learnings
+I learned how even just readable .bashrc can be exploited to find any sensitive data like API keys.
 
 ### References
